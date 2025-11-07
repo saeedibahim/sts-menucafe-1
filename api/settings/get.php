@@ -11,6 +11,9 @@ if ($_SERVER['REQUEST_METHOD'] !== 'GET') {
     sendError('طريقة غير مسموحة', 405);
 }
 
+// Set cache headers (cache for 10 minutes - settings change rarely)
+setCacheHeaders(600);
+
 try {
     $pdo = getConnection();
 

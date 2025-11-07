@@ -155,3 +155,29 @@ function getRequestData() {
     $data = json_decode(file_get_contents('php://input'), true);
     return $data ? $data : [];
 }
+
+/**
+ * Set cache headers for GET requests
+ * @param int $maxAge Cache duration in seconds (default: 5 minutes)
+ */
+function setCacheHeaders($maxAge = 300) {
+    // Only cache GET requests
+    if ($_SERVER['REQUEST_METHOD'] !== 'GET') {
+        return;
+    }
+
+    // Set cache headers
+    header("Cache-Control: public, max-age=$maxAge");
+    header("Expires: " . gmdate('D, d M Y H:i:s', time() + $maxAge) . ' GMT');
+    header("Last-Modified: " . gmdate('D, d M Y H:i:s') . ' GMT');
+
+    // Support ETags for better caching
+    $etag = md5($_SERVER['REQUEST_URI']);
+    header("ETag: \"$etag\"");
+
+    // Check if client has cached version
+    if (isset($_SERVER['HTTP_IF_NONE_MATCH']) && $_SERVER['HTTP_IF_NONE_MATCH'] === "\"$etag\"") {
+        http_response_code(304);
+        exit();
+    }
+}

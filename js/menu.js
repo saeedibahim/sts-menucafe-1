@@ -194,7 +194,7 @@ function renderItems(items) {
 
     const itemsHTML = items.map(item => {
         const imageHTML = item.image_url && item.image_url.trim() !== ''
-            ? `<img src="${item.image_url}" alt="${item.name}">`
+            ? `<img src="${item.image_url}" alt="${item.name}" loading="lazy">`
             : `<span class="item-placeholder">${item.category_icon || '🍽️'}</span>`;
 
         return `
