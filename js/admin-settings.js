@@ -7,8 +7,6 @@
 const settingsForm = document.getElementById('settings-form');
 const cafeNameInput = document.getElementById('cafe-name');
 const logoUrlInput = document.getElementById('logo-url');
-const whatsappInput = document.getElementById('whatsapp');
-const instagramInput = document.getElementById('instagram');
 
 // Initialize when section becomes active
 document.addEventListener('DOMContentLoaded', () => {
@@ -35,8 +33,6 @@ async function loadSettings() {
 
             cafeNameInput.value = settings.cafe_name || '';
             logoUrlInput.value = settings.logo_url || '';
-            whatsappInput.value = settings.whatsapp || '';
-            instagramInput.value = settings.instagram || '';
         }
     } catch (error) {
         console.error('Error loading settings:', error);
@@ -53,8 +49,8 @@ async function handleSettingsSubmit(e) {
     const formData = {
         cafe_name: cafeNameInput.value,
         logo_url: logoUrlInput.value,
-        whatsapp: whatsappInput.value,
-        instagram: instagramInput.value
+        whatsapp: '+966500000000', // Company contact (not editable)
+        instagram: '@sts_software'  // Company contact (not editable)
     };
 
     try {

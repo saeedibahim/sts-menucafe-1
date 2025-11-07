@@ -53,20 +53,14 @@ async function loadSettings() {
             if (settings.logo_url && settings.logo_url.trim() !== '') {
                 cafeLogo.innerHTML = `<img src="${settings.logo_url}" alt="${settings.cafe_name}">`;
             }
-
-            // Update WhatsApp
-            if (settings.whatsapp) {
-                whatsappNumber.textContent = settings.whatsapp;
-                whatsappLink.href = `https://wa.me/${settings.whatsapp.replace(/[^0-9]/g, '')}`;
-            }
-
-            // Update Instagram
-            if (settings.instagram) {
-                instagramHandle.textContent = settings.instagram;
-                const handle = settings.instagram.replace('@', '');
-                instagramLink.href = `https://instagram.com/${handle}`;
-            }
         }
+
+        // Company contact info (hardcoded, not editable by cafe owner)
+        whatsappNumber.textContent = '+966500000000';
+        whatsappLink.href = 'https://wa.me/966500000000';
+        instagramHandle.textContent = '@sts_software';
+        instagramLink.href = 'https://instagram.com/sts_software';
+
     } catch (error) {
         console.error('Error loading settings:', error);
     }

@@ -155,7 +155,6 @@
                 <table class="data-table">
                     <thead>
                         <tr>
-                            <th>الرمز</th>
                             <th>اسم الفئة</th>
                             <th>عدد الأصناف</th>
                             <th>ترتيب العرض</th>
@@ -164,7 +163,7 @@
                     </thead>
                     <tbody id="categories-table">
                         <tr>
-                            <td colspan="5" class="loading-cell">جاري التحميل...</td>
+                            <td colspan="4" class="loading-cell">جاري التحميل...</td>
                         </tr>
                     </tbody>
                 </table>
@@ -230,16 +229,6 @@
                         <small>اترك فارغاً لاستخدام الشعار الافتراضي</small>
                     </div>
 
-                    <div class="form-group">
-                        <label for="whatsapp">رقم الواتساب</label>
-                        <input type="text" id="whatsapp" name="whatsapp" placeholder="+966500000000">
-                    </div>
-
-                    <div class="form-group">
-                        <label for="instagram">حساب الإنستقرام</label>
-                        <input type="text" id="instagram" name="instagram" placeholder="@cafe_example">
-                    </div>
-
                     <button type="submit" class="btn-primary">حفظ التغييرات</button>
                 </form>
             </div>
@@ -260,12 +249,6 @@
                 <div class="form-group">
                     <label for="category-name">اسم الفئة *</label>
                     <input type="text" id="category-name" name="name" required>
-                </div>
-
-                <div class="form-group">
-                    <label for="category-icon">الرمز *</label>
-                    <input type="text" id="category-icon" name="icon" placeholder="🍽️" required>
-                    <small>أدخل إيموجي واحد</small>
                 </div>
 
                 <div class="form-group">
@@ -316,9 +299,12 @@
                 </div>
 
                 <div class="form-group">
-                    <label for="item-image">رابط الصورة</label>
-                    <input type="url" id="item-image" name="image_url" placeholder="https://example.com/image.jpg">
+                    <label for="item-image">صورة الصنف</label>
+                    <input type="file" id="item-image" name="image" accept="image/*">
                     <small>اترك فارغاً لاستخدام الرمز الافتراضي</small>
+                    <div id="image-preview" style="margin-top: 10px; display: none;">
+                        <img id="preview-img" src="" alt="معاينة" style="max-width: 200px; max-height: 200px; border-radius: 12px;">
+                    </div>
                 </div>
 
                 <div class="modal-actions">

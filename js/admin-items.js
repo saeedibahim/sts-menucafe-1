@@ -62,13 +62,13 @@ async function loadItemCategories() {
 function populateCategoryDropdowns() {
     // Filter dropdown
     const filterOptions = itemCategories.map(cat =>
-        `<option value="${cat.id}">${cat.icon} ${cat.name}</option>`
+        `<option value="${cat.id}">${cat.name}</option>`
     ).join('');
     filterCategory.innerHTML = '<option value="">الكل</option>' + filterOptions;
 
     // Item form dropdown
     const itemOptions = itemCategories.map(cat =>
-        `<option value="${cat.id}">${cat.icon} ${cat.name}</option>`
+        `<option value="${cat.id}">${cat.name}</option>`
     ).join('');
     itemCategorySelect.innerHTML = '<option value="">اختر الفئة</option>' + itemOptions;
 }
@@ -150,6 +150,10 @@ function renderItems() {
 function openItemModal(item = null) {
     editingItemId = item ? item.id : null;
 
+    // Reset form
+    itemForm.reset();
+    document.getElementById('image-preview').style.display = 'none';
+
     if (item) {
         // Edit mode
         itemModalTitle.textContent = 'تعديل الصنف';
@@ -158,15 +162,37 @@ function openItemModal(item = null) {
         document.getElementById('item-name').value = item.name;
         document.getElementById('item-description').value = item.description || '';
         document.getElementById('item-price').value = item.price;
-        document.getElementById('item-image').value = item.image_url || '';
+
+        // Show existing image if available
+        if (item.image_url && item.image_url.trim() !== '') {
+            document.getElementById('preview-img').src = item.image_url;
+            document.getElementById('image-preview').style.display = 'block';
+        }
     } else {
         // Add mode
         itemModalTitle.textContent = 'إضافة صنف جديد';
-        itemForm.reset();
     }
 
     itemModal.classList.add('active');
 }
+
+// Add image preview on file select
+document.addEventListener('DOMContentLoaded', () => {
+    const imageInput = document.getElementById('item-image');
+    if (imageInput) {
+        imageInput.addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(event) {
+                    document.getElementById('preview-img').src = event.target.result;
+                    document.getElementById('image-preview').style.display = 'block';
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+    }
+});
 
 /**
  * Handle item form submit
@@ -174,36 +200,66 @@ function openItemModal(item = null) {
 async function handleItemSubmit(e) {
     e.preventDefault();
 
-    const formData = {
-        category_id: document.getElementById('item-category').value,
-        name: document.getElementById('item-name').value,
-        description: document.getElementById('item-description').value,
-        price: parseFloat(document.getElementById('item-price').value),
-        image_url: document.getElementById('item-image').value
-    };
+    const category_id = document.getElementById('item-category').value;
+    const name = document.getElementById('item-name').value;
+    const description = document.getElementById('item-description').value;
+    const price = parseFloat(document.getElementById('item-price').value);
+    const imageFile = document.getElementById('item-image').files[0];
 
-    if (!formData.category_id) {
+    if (!category_id) {
         alert('الرجاء اختيار الفئة');
         return;
     }
 
     try {
+        let image_url = '';
+
+        // Upload image if file is selected
+        if (imageFile) {
+            const uploadFormData = new FormData();
+            uploadFormData.append('image', imageFile);
+
+            const uploadResponse = await fetch('api/items/upload.php', {
+                method: 'POST',
+                body: uploadFormData
+            });
+
+            const uploadData = await uploadResponse.json();
+
+            if (!uploadData.success) {
+                alert(uploadData.message || 'حدث خطأ أثناء رفع الصورة');
+                return;
+            }
+
+            image_url = uploadData.data.image_url;
+        }
+
+        // Prepare item data
+        const itemData = {
+            category_id: category_id,
+            name: name,
+            description: description,
+            price: price,
+            image_url: image_url
+        };
+
+        if (editingItemId) {
+            itemData.id = editingItemId;
+        }
+
+        // Save item
         const url = editingItemId
             ? 'api/items/update.php'
             : 'api/items/create.php';
 
         const method = editingItemId ? 'PUT' : 'POST';
 
-        if (editingItemId) {
-            formData.id = editingItemId;
-        }
-
         const response = await fetch(url, {
             method: method,
             headers: {
                 'Content-Type': 'application/json'
             },
-            body: JSON.stringify(formData)
+            body: JSON.stringify(itemData)
         });
 
         const data = await response.json();

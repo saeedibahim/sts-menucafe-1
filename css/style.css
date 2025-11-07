@@ -175,25 +175,10 @@ body {
 /* Category Tabs */
 .category-tabs {
     display: flex;
+    flex-wrap: wrap;
     gap: 12px;
     margin-bottom: 40px;
-    overflow-x: auto;
     padding: 10px 0;
-    scrollbar-width: thin;
-    scrollbar-color: var(--accent-gold) transparent;
-}
-
-.category-tabs::-webkit-scrollbar {
-    height: 6px;
-}
-
-.category-tabs::-webkit-scrollbar-track {
-    background: transparent;
-}
-
-.category-tabs::-webkit-scrollbar-thumb {
-    background: var(--accent-gold);
-    border-radius: 3px;
 }
 
 .category-tab {
@@ -226,7 +211,7 @@ body {
 }
 
 .tab-icon {
-    font-size: 1.2rem;
+    display: none;
 }
 
 /* Items Grid */

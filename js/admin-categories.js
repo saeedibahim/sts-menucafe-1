@@ -189,13 +189,12 @@ async function loadCategories() {
  */
 function renderCategories() {
     if (categories.length === 0) {
-        categoriesTable.innerHTML = '<tr><td colspan="5" class="loading-cell">لا توجد فئات</td></tr>';
+        categoriesTable.innerHTML = '<tr><td colspan="4" class="loading-cell">لا توجد فئات</td></tr>';
         return;
     }
 
     const html = categories.map(category => `
         <tr>
-            <td><span style="font-size: 2rem;">${category.icon}</span></td>
             <td>${category.name}</td>
             <td>${category.item_count || 0}</td>
             <td>${category.display_order}</td>
@@ -232,7 +231,6 @@ function openCategoryModal(category = null) {
         categoryModalTitle.textContent = 'تعديل الفئة';
         document.getElementById('category-id').value = category.id;
         document.getElementById('category-name').value = category.name;
-        document.getElementById('category-icon').value = category.icon;
         document.getElementById('category-order').value = category.display_order;
     } else {
         // Add mode
@@ -251,7 +249,7 @@ async function handleCategorySubmit(e) {
 
     const formData = {
         name: document.getElementById('category-name').value,
-        icon: document.getElementById('category-icon').value,
+        icon: '', // No icon needed
         display_order: parseInt(document.getElementById('category-order').value) || 0
     };
 

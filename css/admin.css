@@ -416,6 +416,20 @@ body {
     box-shadow: 0 0 0 3px rgba(200, 168, 115, 0.1);
 }
 
+/* Ensure select options use the correct font */
+.form-group select option {
+    font-family: 'IBM Plex Sans Arabic', sans-serif;
+    font-size: 1rem;
+    padding: 8px;
+}
+
+/* Specific styling for filter dropdown */
+.filter-select option {
+    font-family: 'IBM Plex Sans Arabic', sans-serif;
+    font-size: 1rem;
+    padding: 8px;
+}
+
 .form-group textarea {
     resize: vertical;
     min-height: 80px;
