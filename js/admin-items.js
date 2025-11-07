@@ -66,11 +66,76 @@ function populateCategoryDropdowns() {
     ).join('');
     filterCategory.innerHTML = '<option value="">الكل</option>' + filterOptions;
 
-    // Item form dropdown
+    // Item form dropdown (hidden select)
     const itemOptions = itemCategories.map(cat =>
         `<option value="${cat.id}">${cat.name}</option>`
     ).join('');
     itemCategorySelect.innerHTML = '<option value="">اختر الفئة</option>' + itemOptions;
+
+    // Custom select dropdown
+    const customSelectOptions = document.querySelector('#custom-category-select .custom-select-options');
+    if (customSelectOptions) {
+        const customOptions = [
+            { id: '', name: 'اختر الفئة' },
+            ...itemCategories
+        ].map(cat =>
+            `<div class="custom-select-option" data-value="${cat.id}">${cat.name}</div>`
+        ).join('');
+        customSelectOptions.innerHTML = customOptions;
+
+        // Initialize custom select
+        initCustomSelect();
+    }
+}
+
+/**
+ * Initialize custom select functionality
+ */
+function initCustomSelect() {
+    const customSelect = document.getElementById('custom-category-select');
+    const trigger = customSelect.querySelector('.custom-select-trigger');
+    const options = customSelect.querySelector('.custom-select-options');
+    const selectText = customSelect.querySelector('.custom-select-text');
+    const hiddenSelect = document.getElementById('item-category');
+
+    // Toggle dropdown
+    trigger.addEventListener('click', function(e) {
+        e.stopPropagation();
+        trigger.classList.toggle('active');
+        options.classList.toggle('active');
+    });
+
+    // Handle option selection
+    options.addEventListener('click', function(e) {
+        if (e.target.classList.contains('custom-select-option')) {
+            const value = e.target.dataset.value;
+            const text = e.target.textContent;
+
+            // Update hidden select
+            hiddenSelect.value = value;
+
+            // Update display text
+            selectText.textContent = text;
+
+            // Update selected state
+            options.querySelectorAll('.custom-select-option').forEach(opt => {
+                opt.classList.remove('selected');
+            });
+            e.target.classList.add('selected');
+
+            // Close dropdown
+            trigger.classList.remove('active');
+            options.classList.remove('active');
+        }
+    });
+
+    // Close dropdown when clicking outside
+    document.addEventListener('click', function(e) {
+        if (!customSelect.contains(e.target)) {
+            trigger.classList.remove('active');
+            options.classList.remove('active');
+        }
+    });
 }
 
 /**
@@ -154,6 +219,10 @@ function openItemModal(item = null) {
     itemForm.reset();
     document.getElementById('image-preview').style.display = 'none';
 
+    // Reset custom select
+    const customSelectText = document.querySelector('#custom-category-select .custom-select-text');
+    const customSelectOptions = document.querySelectorAll('#custom-category-select .custom-select-option');
+
     if (item) {
         // Edit mode
         itemModalTitle.textContent = 'تعديل الصنف';
@@ -163,6 +232,18 @@ function openItemModal(item = null) {
         document.getElementById('item-description').value = item.description || '';
         document.getElementById('item-price').value = item.price;
 
+        // Update custom select display
+        const selectedCategory = itemCategories.find(cat => cat.id == item.category_id);
+        if (selectedCategory && customSelectText) {
+            customSelectText.textContent = selectedCategory.name;
+            customSelectOptions.forEach(opt => {
+                opt.classList.remove('selected');
+                if (opt.dataset.value == item.category_id) {
+                    opt.classList.add('selected');
+                }
+            });
+        }
+
         // Show existing image if available
         if (item.image_url && item.image_url.trim() !== '') {
             document.getElementById('preview-img').src = item.image_url;
@@ -171,6 +252,10 @@ function openItemModal(item = null) {
     } else {
         // Add mode
         itemModalTitle.textContent = 'إضافة صنف جديد';
+        if (customSelectText) {
+            customSelectText.textContent = 'اختر الفئة';
+        }
+        customSelectOptions.forEach(opt => opt.classList.remove('selected'));
     }
 
     itemModal.classList.add('active');

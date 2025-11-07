@@ -224,9 +224,12 @@
                     </div>
 
                     <div class="form-group">
-                        <label for="logo-url">رابط الشعار</label>
-                        <input type="url" id="logo-url" name="logo_url" placeholder="https://example.com/logo.png">
+                        <label for="logo-file">شعار المقهى</label>
+                        <input type="file" id="logo-file" name="logo" accept="image/*">
                         <small>اترك فارغاً لاستخدام الشعار الافتراضي</small>
+                        <div id="logo-preview" style="margin-top: 10px; display: none;">
+                            <img id="logo-preview-img" src="" alt="معاينة الشعار" style="max-width: 120px; max-height: 120px; border-radius: 12px;">
+                        </div>
                     </div>
 
                     <button type="submit" class="btn-primary">حفظ التغييرات</button>
@@ -278,9 +281,18 @@
 
                 <div class="form-group">
                     <label for="item-category">الفئة *</label>
-                    <select id="item-category" name="category_id" required>
+                    <select id="item-category" name="category_id" required style="display: none;">
                         <option value="">اختر الفئة</option>
                     </select>
+                    <div class="custom-select" id="custom-category-select">
+                        <div class="custom-select-trigger">
+                            <span class="custom-select-text">اختر الفئة</span>
+                            <div class="custom-select-arrow"></div>
+                        </div>
+                        <div class="custom-select-options">
+                            <!-- Options will be populated by JavaScript -->
+                        </div>
+                    </div>
                 </div>
 
                 <div class="form-group">
