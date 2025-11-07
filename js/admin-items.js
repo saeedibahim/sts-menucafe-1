@@ -37,7 +37,48 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Filter by category
     filterCategory.addEventListener('change', loadItems);
+
+    // Initialize modal close functionality
+    initModals();
+
+    // Image preview on file select
+    const imageInput = document.getElementById('item-image');
+    if (imageInput) {
+        imageInput.addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(event) {
+                    document.getElementById('preview-img').src = event.target.result;
+                    document.getElementById('image-preview').style.display = 'block';
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+    }
 });
+
+/**
+ * Initialize modals
+ */
+function initModals() {
+    // Get all modal close buttons
+    const itemModalCloseButtons = itemModal.querySelectorAll('.modal-close, .modal-cancel');
+
+    // Add click event to close buttons
+    itemModalCloseButtons.forEach(btn => {
+        btn.addEventListener('click', () => {
+            itemModal.classList.remove('active');
+        });
+    });
+
+    // Click outside modal to close
+    itemModal.addEventListener('click', (e) => {
+        if (e.target === itemModal) {
+            itemModal.classList.remove('active');
+        }
+    });
+}
 
 /**
  * Load categories for dropdowns
@@ -260,24 +301,6 @@ function openItemModal(item = null) {
 
     itemModal.classList.add('active');
 }
-
-// Add image preview on file select
-document.addEventListener('DOMContentLoaded', () => {
-    const imageInput = document.getElementById('item-image');
-    if (imageInput) {
-        imageInput.addEventListener('change', function(e) {
-            const file = e.target.files[0];
-            if (file) {
-                const reader = new FileReader();
-                reader.onload = function(event) {
-                    document.getElementById('preview-img').src = event.target.result;
-                    document.getElementById('image-preview').style.display = 'block';
-                };
-                reader.readAsDataURL(file);
-            }
-        });
-    }
-});
 
 /**
  * Handle item form submit
