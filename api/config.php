@@ -22,7 +22,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
 }
 
 // Database configuration
-define('DB_HOST', 'localhost');
+define('DB_HOST', 'localhost:3307');
 define('DB_NAME', 'cafe_menu');
 define('DB_USER', 'root');
 define('DB_PASS', '');
