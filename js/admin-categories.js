@@ -56,7 +56,7 @@ async function checkAuth() {
  * Initialize navigation
  */
 function initNavigation() {
-    const navItems = document.querySelectorAll('.nav-item[data-section]');
+    const navItems = document.querySelectorAll('.nav-item[data-section], .mobile-nav-item[data-section]');
     const sections = document.querySelectorAll('.content-section');
 
     navItems.forEach(item => {
@@ -65,9 +65,12 @@ function initNavigation() {
 
             const targetSection = item.dataset.section;
 
-            // Update nav items
+            // Update nav items (both sidebar and mobile)
             navItems.forEach(nav => nav.classList.remove('active'));
-            item.classList.add('active');
+            // Update both sidebar and mobile navbar
+            document.querySelectorAll(`[data-section="${targetSection}"]`).forEach(el => {
+                el.classList.add('active');
+            });
 
             // Update sections
             sections.forEach(section => section.classList.remove('active'));
@@ -84,6 +87,12 @@ function initNavigation() {
             }
         });
     });
+
+    // Mobile logout button
+    const mobileLogoutBtn = document.getElementById('mobile-logout-btn');
+    if (mobileLogoutBtn) {
+        mobileLogoutBtn.addEventListener('click', handleLogout);
+    }
 }
 
 /**
